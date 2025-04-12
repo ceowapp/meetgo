@@ -17,7 +17,7 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    ENV["Firebase_CLI_TOKEN"] = "PLACEHOLDER_FIREBASE_CLI_TOKEN"
+    ENV["Firebase_CLI_TOKEN"] = "1//0e-2P6JXJ4R7gCgYIARAAGA4SNwF-L9Ir0pGfAVDqXpnOAUB6SGC5XQmsODc7OOkfdhbC4q5nskHQH_0Hb-sQbHlUHWh24yUINps"
   end
   desc "Push a new release ipa file to the Firebase distribution"
   lane :build_dev do |options|
@@ -40,7 +40,7 @@ platform :ios do
 
   lane :upload_ipa_distribution do |options|
     firebase_app_distribution(
-      app: 'PLACEHOLDER_IOS_FIREBASE_APP_ID',
+      app: '1:1073852357664:ios:7f27e4ea8fd25ceb5eb045',
       firebase_cli_token: ENV["Firebase_CLI_TOKEN"],
       release_notes: options[:message].gsub(/##/,"\n"),
       groups: 'Tester'
@@ -49,8 +49,8 @@ platform :ios do
 end
 
 platform :android do
-  before_all do
-    ENV["Firebase_CLI_TOKEN"] = "PLACEHOLDER_FIREBASE_CLI_TOKEN"
+   before_all do
+    ENV["Firebase_CLI_TOKEN"] = "1//0e-2P6JXJ4R7gCgYIARAAGA4SNwF-L9Ir0pGfAVDqXpnOAUB6SGC5XQmsODc7OOkfdhbC4q5nskHQH_0Hb-sQbHlUHWh24yUINps"
   end
   desc "Push a new release apk file to the Firebase distribution"
   lane :build_dev do |options|
@@ -70,7 +70,7 @@ platform :android do
   desc "Upload android to Firebase"
   lane :upload_apk_distribution do |options|
     firebase_app_distribution(
-      app: "PLACEHOLDER_ANDROID_FIREBASE_APP_ID",
+      app: "1:1073852357664:android:c95a4c70fe2ebcfd5eb045",
       firebase_cli_token: ENV["Firebase_CLI_TOKEN"],
       release_notes: options[:message].gsub(/##/,"\n"),
       groups: 'Tester'

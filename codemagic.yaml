@@ -5,7 +5,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/meetgo.xcworkspace"
         XCODE_SCHEME: "meetgo"
-        IPHONEOS_DEPLOYMENT_TARGET: "13.0" 
+        IPHONEOS_DEPLOYMENT_TARGET: "13.0"
       xcode: latest
       cocoapods: default
     scripts:
@@ -17,7 +17,7 @@ workflows:
         script: |
           cd ios
           # Update any potential deployment target mismatches in Pods
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' Pods/Target\ Support\ Files/*/*.xcconfig
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' Pods/Target\ Support\ Files/*/*.xcconfig || true
           cd ..
       - name: Generate exportOptions.plist
         script: |
@@ -27,9 +27,7 @@ workflows:
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>app-store</string>
-              <key>teamID</key>
-              <string>YOUR_TEAM_ID</string>
+              <string>development</string>
               <key>signingStyle</key>
               <string>automatic</string>
               <key>stripSwiftSymbols</key>
@@ -41,9 +39,15 @@ workflows:
           </dict>
           </plist>
           EOL
-      - name: Build iOS app
+      - name: Build iOS app with verbose output
         script: |
           mkdir -p build
+          set -x  # Enable verbose output
+          xcodebuild clean \
+          -workspace "$XCODE_WORKSPACE" \
+          -scheme "$XCODE_SCHEME" \
+          -configuration Release
+          
           xcodebuild \
           -workspace "$XCODE_WORKSPACE" \
           -scheme "$XCODE_SCHEME" \
@@ -51,7 +55,9 @@ workflows:
           -sdk iphoneos \
           -archivePath build/meetgo.xcarchive \
           IPHONEOS_DEPLOYMENT_TARGET=13.0 \
-          archive
+          OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" \
+          CODE_SIGN_IDENTITY="Apple Development" \
+          archive -verbose
           
           # Check if archive was created
           if [ -d "build/meetgo.xcarchive" ]; then
@@ -60,7 +66,8 @@ workflows:
             -exportArchive \
             -archivePath build/meetgo.xcarchive \
             -exportOptionsPlist ios/exportOptions.plist \
-            -exportPath build/ios
+            -exportPath build/ios \
+            -verbose
           else
             echo "Archive creation failed"
             exit 1

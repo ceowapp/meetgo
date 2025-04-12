@@ -50,7 +50,7 @@ end
 
 platform :android do
    before_all do
-    ENV["Firebase_CLI_TOKEN"] = "1//0e-2P6JXJ4R7gCgYIARAAGA4SNwF-L9Ir0pGfAVDqXpnOAUB6SGC5XQmsODc7OOkfdhbC4q5nskHQH_0Hb-sQbHlUHWh24yUINps"
+    ENV["Firebase_CLI_TOKEN"] = "PLACE_HOLDER"
   end
   desc "Push a new release apk file to the Firebase distribution"
   lane :build_dev do |options|

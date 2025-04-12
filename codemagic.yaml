@@ -8,24 +8,26 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
-      - echo "Installing dependencies"
-      - npm install
-      - cd ios && pod install && cd ..
-      - echo "Building iOS app"
-      - |
-        xcodebuild \
-        -workspace "$XCODE_WORKSPACE" \
-        -scheme "$XCODE_SCHEME" \
-        -configuration Release \
-        -sdk iphoneos \
-        -derivedDataPath build
+      - name: Install dependencies
+        script: |
+          npm install
+          cd ios && pod install && cd ..
+      - name: Build iOS app
+        script: |
+          xcodebuild \
+          -workspace "$XCODE_WORKSPACE" \
+          -scheme "$XCODE_SCHEME" \
+          -configuration Release \
+          -sdk iphoneos \
+          -archivePath build/meetgo.xcarchive archive
+
+          xcodebuild \
+          -exportArchive \
+          -archivePath build/meetgo.xcarchive \
+          -exportOptionsPlist ios/exportOptions.plist \
+          -exportPath build/ios
     artifacts:
-      - build/**/*.app
-      - build/**/*.ipa
+      - build/ios/*.ipa
     publishing:
       firebase:
         firebase_token: $FIREBASE_TOKEN
-        ios:
-          app_id: "1:1073852357664:ios:7f27e4ea8fd25ceb5eb045"
-          groups: "Tester"
-          release_notes: "New iOS build uploaded from Codemagic"

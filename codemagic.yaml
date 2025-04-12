@@ -5,7 +5,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/meetgo.xcworkspace"
         XCODE_SCHEME: "meetgo"
-        IPHONEOS_DEPLOYMENT_TARGET: "12.0"
+        IPHONEOS_DEPLOYMENT_TARGET: "13.0" 
       xcode: latest
       cocoapods: default
     scripts:
@@ -13,23 +13,11 @@ workflows:
         script: |
           npm install --legacy-peer-deps
           cd ios && pod install && cd ..
-      - name: Update Deployment Target
+      - name: Update Pod targets
         script: |
           cd ios
-          # Update project deployment target
-          plutil -replace IPHONEOS_DEPLOYMENT_TARGET -string "12.0" meetgo.xcodeproj/project.pbxproj
-          # Create a post_install hook in Podfile if it doesn't exist
-          if ! grep -q "post_install do |installer|" Podfile; then
-            echo '
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "12.0"
-    end
-  end
-end' >> Podfile
-            pod install
-          fi
+          # Update any potential deployment target mismatches in Pods
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' Pods/Target\ Support\ Files/*/*.xcconfig
           cd ..
       - name: Generate exportOptions.plist
         script: |
@@ -62,7 +50,7 @@ end' >> Podfile
           -configuration Release \
           -sdk iphoneos \
           -archivePath build/meetgo.xcarchive \
-          IPHONEOS_DEPLOYMENT_TARGET=12.0 \
+          IPHONEOS_DEPLOYMENT_TARGET=13.0 \
           archive
           
           # Check if archive was created

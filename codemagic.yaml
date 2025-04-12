@@ -36,16 +36,25 @@ workflows:
           EOL
       - name: Build iOS app
         script: |
+          mkdir -p build
           xcodebuild \
           -workspace "$XCODE_WORKSPACE" \
           -scheme "$XCODE_SCHEME" \
           -configuration Release \
           -sdk iphoneos \
           -archivePath build/meetgo.xcarchive archive
-          xcodebuild \
-          -exportArchive \
-          -archivePath build/meetgo.xcarchive \
-          -exportOptionsPlist ios/exportOptions.plist \
-          -exportPath build/ios
+          
+          # Check if archive was created
+          if [ -d "build/meetgo.xcarchive" ]; then
+            echo "Archive created successfully"
+            xcodebuild \
+            -exportArchive \
+            -archivePath build/meetgo.xcarchive \
+            -exportOptionsPlist ios/exportOptions.plist \
+            -exportPath build/ios
+          else
+            echo "Archive creation failed"
+            exit 1
+          fi
     artifacts:
       - build/ios/*.ipa

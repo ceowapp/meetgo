@@ -18,6 +18,8 @@ workflows:
           cd ios
           # Update any potential deployment target mismatches in Pods
           sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' Pods/Target\ Support\ Files/*/*.xcconfig || true
+          # Fix Swift optimization level mismatch
+          sed -i '' 's/SWIFT_OPTIMIZATION_LEVEL = -O/SWIFT_OPTIMIZATION_LEVEL = -Onone/g' Pods/Target\ Support\ Files/*/*.xcconfig || true
           cd ..
       - name: Generate exportOptions.plist
         script: |
@@ -57,6 +59,7 @@ workflows:
           IPHONEOS_DEPLOYMENT_TARGET=13.0 \
           OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" \
           CODE_SIGN_IDENTITY="Apple Development" \
+          SWIFT_OPTIMIZATION_LEVEL="-Onone" \
           archive -verbose
           
           # Check if archive was created

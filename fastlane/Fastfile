@@ -17,7 +17,7 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    ENV["Firebase_CLI_TOKEN"] = "1//0e-2P6JXJ4R7gCgYIARAAGA4SNwF-L9Ir0pGfAVDqXpnOAUB6SGC5XQmsODc7OOkfdhbC4q5nskHQH_0Hb-sQbHlUHWh24yUINps"
+    ENV["Firebase_CLI_TOKEN"] = "YOUR_TOKEN_HERE"
   end
   desc "Push a new release ipa file to the Firebase distribution"
   lane :build_dev do |options|

@@ -20,7 +20,6 @@ workflows:
           -configuration Release \
           -sdk iphoneos \
           -archivePath build/meetgo.xcarchive archive
-
           xcodebuild \
           -exportArchive \
           -archivePath build/meetgo.xcarchive \
@@ -28,6 +27,3 @@ workflows:
           -exportPath build/ios
     artifacts:
       - build/ios/*.ipa
-    publishing:
-      firebase:
-        firebase_token: $FIREBASE_TOKEN
